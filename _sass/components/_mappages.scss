@@ -25,6 +25,7 @@
     padding: 1rem;
     box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.3);
     order: 1;
+    overflow: auto;
 }
 
 .legend-item-container {
@@ -34,14 +35,14 @@
 }
 
 .location-metadata {
-overflow: auto;
-height: 300px;
+    height: 300px;
 }
 input[type="checkbox"], input[type="radio"] {
-display: block;
-float: left;
+display: inline;
+
 margin-right: 10px;
 opacity: 1;
+line-height: 1;
 }
 .custom-layer-control {
     position: relative;
@@ -90,13 +91,14 @@ min-width: 150px;
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
-display: none;
+    display: none;
 position: absolute;
 background-color: #333;
 width: 100%;
 padding: 10px;
 box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 z-index: 1;
+text-align: justify;
 }
 .dropdown:hover .dropdown-content {display: block;}
 
@@ -179,6 +181,7 @@ padding: 0.5em;
         height: 50vh;
         padding: 1rem;
         box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.3);
+        
     }
 
     .custom-layer-control {
@@ -187,6 +190,15 @@ padding: 0.5em;
     }
 
   }
-
-
-  
+  .checkboxes label {
+    display: inline-block;
+    padding-right: 10px;
+    padding-left: 22px;
+    text-indent: -22px;
+  }
+  .checkboxes input {
+    vertical-align: middle;
+  }
+  .checkboxes label span {
+    vertical-align: middle;
+  }

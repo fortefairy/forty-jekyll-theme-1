@@ -1,5 +1,5 @@
 ---
-layout: allmaps
+layout: allmap
 title: Home
 landing-title: 'Roaring 20s Chicago'
 description: Enter a description here

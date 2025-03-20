@@ -1,16 +1,15 @@
-<!-- Uncomment this in order to make it visible, if you do not uncomment, the page will look strange. 
- Please do not edit this template directly. Instead, copy the template and change the name.
 ---
-title: [Add title here]
-layout: maps (maps template can be found in the layout section. Custom css is controlled there)
-description: [Add your description here]
-image: assets/images/[YOUR IMAGE]
-nav-menu: false (if true, block will show up on front landing page)
+title: Hyde Park Map
+layout: maps
+description: '1920s map of Hyde Park'
+image: assets/images/southside.jpg
+nav-menu: false
+show_tile: false
+is_map: true
 ---
-!-->
+
 <!DOCTYPE html>
 <html>
-<!--This controls the layer banner at the top of the map !-->
     <div class="custom-layer-control" id="overlay-controls">
         <div class="dropdown">
             <button class="dropbtn">Satellite Overlay</button>
@@ -32,6 +31,10 @@ nav-menu: false (if true, block will show up on front landing page)
                     <input type="checkbox" id="blank-footprints">
                     <label for="blank-footprints">Blank Footprints</label>
                   </div>
+                <div>
+                    <input type="checkbox" id="sat-footprints">
+                    <label for="sat-footprints">Satellite Footprints</label>
+                </div>
             <div>
                     <input type="checkbox" id="classified-footprints" checked>
                     <label for="classified-footprints">Classified Footprints</label>
@@ -50,6 +53,18 @@ nav-menu: false (if true, block will show up on front landing page)
                               <input type="checkbox" id="churches">
                               <label for="churches">Churches</label>
                           </div>
+                          <div>
+                            <input type="checkbox" id="theaters">
+                            <label for="theaters">Theaters</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="garages">
+                            <label for="garages">Garages</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="transit">
+                            <label for="transit">Transit</label>
+                        </div>
                           <div>
                               <input type="checkbox" id="hotels">
                               <label for="hotels">Hotels</label>
@@ -82,14 +97,11 @@ nav-menu: false (if true, block will show up on front landing page)
         </div>
     </div>
     </div>
-<!--More information about Section ID "one" can be found in components> section.scss AND skel.scss AND in the maps template !-->
-
 <section id="one" class="section-map">
-<!--More information about sidebar can be found in maps template !-->
+    
     <div id="map"></div>
     <div id="sidebar">
         <h2>Hyde Park</h2>
-<!--More information about legend can be found in maps template !-->
         <details class="legend">
             <summary><b>Legend</b></summary>
             <table>
@@ -98,6 +110,21 @@ nav-menu: false (if true, block will show up on front landing page)
                   <td><span class="legend-colorBox" style="background-color: #9fed18;">
                 </span></td>
                 </tr>
+                <tr>
+                    <td>Garage</td>
+                    <td><span class="legend-colorBox" style="background-color: #006400;">
+                  </span></td>
+                  </tr>
+                  <tr>
+                    <td>Theater</td>
+                    <td><span class="legend-colorBox" style="background-color: #FF0000;">
+                  </span></td>
+                  </tr>
+                  <tr>
+                    <td>Transit</td>
+                    <td><span class="legend-colorBox" style="background-color: #000000;">
+                  </span></td>
+                  </tr>
                 <tr>
                   <td>Dwelling</td>
                   <td><span class="legend-colorBox" style="background-color: #987db7;">
@@ -156,8 +183,6 @@ nav-menu: false (if true, block will show up on front landing page)
 
         </details>
 <br>
-<!--More information about location box can be found in maps template !-->
-
 <h3>Location Information</h3>
         <div id="location-data" class="location-metadata">
             <p>
@@ -166,24 +191,21 @@ nav-menu: false (if true, block will show up on front landing page)
         </div>
     </div>	
 </section>
-<!--Calling Scripts !-->
 
-<script src="https://parkerotto.github.io/Final/r20hp.js"></script>
+<script src="https://parkerotto.github.io/R20/R20HP/r20hp_height.js"></script>
 
 <script src="https://parkerotto.github.io/Final/zoning.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-
-//Creating Map
 var map = L.map('map', {
             attributionControl: false
         }).setView([41.794, -87.5948], 16);
         L.control.attribution({prefix: false}).addTo(map);
 
-        var tilesource_layer = L.tileLayer('https://parkerotto.github.io/Final/{z}/{x}/{y}.png', {
+        var tilesource_layer = L.tileLayer('https://parkerotto.github.io/R20/xyz/{z}/{x}/{y}.png', {
             minZoom: 15,
-            maxZoom: 17,
+            maxZoom: 18,
             tms: false,
             attribution: 'Created by Parker Otto (2024) using QGIS.  2023 Street Centerlines, 2016 Chicago Park District Boundaries, 2012 Waterways, and 2023 Community Area Boundaries from the Chicago Data Portal.'
         }).addTo(map);
@@ -191,8 +213,6 @@ var map = L.map('map', {
         var imagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
         });
-
-//Color Coding, This may be the same for all maps and can be reused
 
 function getZoningColor(fudgeZone) {
                 switch (fudgeZone) {
@@ -210,10 +230,13 @@ function getZoningColor(fudgeZone) {
                     case 'Dwelling' : return '#987db7'; // Lavender
                     case 'Hotel' : return '#efc866'; // Yellow
                     case 'Industrial' : return '#00e9fe'; // Light Blue
-                    case 'Institutio' : return '#ff8fd6'; // Pink
+                    case 'Institutional' : return '#ff8fd6'; // Pink
                     case 'Store' : return '#d9615b'; // Burnt Siena
                     case 'Flat' : return '#3596ce'; // Blue
                     case 'UChicago' : return '#800000'; // Maroon
+                    case 'Theater' : return '#FF0000'; //Red
+                    case 'Garage' : return '#006400'; // Green
+                    case 'Transit' : return '#000000'; //Black
                     default : return '#808080'; // Gray
                 }
             };
@@ -222,6 +245,27 @@ function getZoningColor(fudgeZone) {
                 switch (use) {
                     case 'Church' : return '#9fed18';
                     default : return 'transparent';
+                }
+            };
+
+            function getTheaterStyle(use) {
+                switch (use) {
+                    case 'Theater' : return '#FF0000'; 
+                    default: return 'transparent';
+                }
+            };
+
+            function getGarageStyle(use) {
+                switch (use) {
+                    case 'Garage' : return '#006400'; 
+                    default: return 'transparent';
+                }
+            };
+
+            function getTransitStyle(use) {
+                switch (use) {
+                    case 'Transit' : return '#000000'; //PLACEHOLDER COLOR
+                    default: return 'transparent';
                 }
             };
 
@@ -248,7 +292,7 @@ function getZoningColor(fudgeZone) {
             
             function getInstitutionalStyle(use) {
                 switch (use) {
-                    case 'Institutio' : return '#ff8fd6'; // Pink
+                    case 'Institutional' : return '#ff8fd6'; // Pink
                     default : return 'transparent';
                 }
             };
@@ -273,14 +317,6 @@ function getZoningColor(fudgeZone) {
                     default : return 'transparent'; // Gray
                 }
             };
-
-       //     function getFillOpacityByUse(use) {
-     //           switch (use) {
-     //               case 'Church': return 0.5;
-   //                 case 'Flat': return 0.9;
-   //                 default: return 0.7;
-   //             }
-  //          };
 
             function style(feature){
                 return {
@@ -402,8 +438,6 @@ function getZoningColor(fudgeZone) {
                 }
             };
             
-//Pop-ups to append to sidebar, will need to be added to original GitHub code found on Parker's GitHub to adapt functionality
-
 var zoningOEF = function (feature, layer) {
                 if (feature.properties) {
                     var prop = feature.properties;
@@ -412,8 +446,6 @@ var zoningOEF = function (feature, layer) {
                         prop['fudgeZone']
                         + '<br><br><small><i>Zoning Class: ' + prop['zone_class'] +'</i></small>'
                         + '<br><small><i>Zoning Type: ' + prop['zone_type'] + '</i></small>';
-
-//Specific place for On Click functionality for sidebar
 
                     feature.layer = layer;
                     layer.on('click', function (){
@@ -432,8 +464,10 @@ var zoningOEF = function (feature, layer) {
                         '<br><b>Footprint Area: </b>' + prop['area'] + ' m<sup>2</sup>' +
                         '<br><b>Footprint Year: </b>' + prop['Year'] +
                         '<br><b>Use: </b>' + prop['Use'] +
+                        '<br><b>Height: </b>' + prop['Height'] + ' Stories' + 
+                        '<br><b>Primary Material: </b>' + prop['Material'] + 
+                        '<br><b>Building Name (If Applicable): </b>' + prop['Name'] + 
                         '<br><br><small>Coordinates: <i>' + prop['lat'] + ', ' + prop['long'] + '</i></small>';
-//Specific place for On Click functionality for sidebar
 
                     feature.layer = layer;
                     
@@ -442,7 +476,6 @@ layer.on('click', function (){
   
 });
                   
-//Taken from Parker's original code
 
                     layer.on('click', function () {
                     if (!layer.halo) {
@@ -487,8 +520,6 @@ layer.on('click', function (){
                 );
                 }
             };
-
-//Will need to be adapted for each map
 var footprints = new L.geoJson(r20hp, 
                 {
                     style : style,
@@ -513,6 +544,27 @@ var footprints = new L.geoJson(r20hp,
             var churchFootprints = new L.geoJson(r20hp,
                 {
                     style : churchStyle,
+                    onEachFeature: onEachFeature
+                }
+            );
+
+            var theaterFootprints = new L.geoJson(r20hp,
+                {
+                    style : theaterStyle,
+                    onEachFeature: onEachFeature
+                }
+            );
+
+            var garageFootprints = new L.geoJson(r20hp,
+                {
+                    style : garageStyle,
+                    onEachFeature: onEachFeature
+                }
+            );
+
+            var transitFootprints = new L.geoJson(r20hp,
+                {
+                    style : transitStyle,
                     onEachFeature: onEachFeature
                 }
             );
@@ -573,7 +625,6 @@ var footprints = new L.geoJson(r20hp,
                 }
             );
 
-//The following is different from line 460 on in Hyde Park r20 maps
 function switchBaseLayer(layer) {
             map.eachLayer(function(lyr) {
                 if (lyr !== layer) {
@@ -586,8 +637,12 @@ function switchBaseLayer(layer) {
         var overlayLayers = {
             'Blank Footprints': footprints,
             'Classified Footprints': classifiedFootprints,
+            'Satellite Footprints': satFootprints,
           "2023 Zoning Map" : zoningMap,
             'Churches': churchFootprints,
+            'Theaters': theaterFootprints,
+            'Garages': garageFootprints,
+            'Transit': transitFootprints,
             'Hotels': hotelFootprints,
             'Industrial': industrialFootprints,
             'Institutional': institutionalFootprints,
@@ -597,7 +652,6 @@ function switchBaseLayer(layer) {
             'Dwellings': dwellingFootprints
         };
 
-//Additional code to make custom-layer control work
         document.querySelectorAll('.custom-layer-control input[type="checkbox"]').forEach(function(checkbox) {
             checkbox.addEventListener('change', function() {
                 var layer = overlayLayers[this.labels[0].textContent];
@@ -637,6 +691,30 @@ function switchBaseLayer(layer) {
                 });
             });
         });
+        var basemaps = {
+                "Default": tilesource_layer,
+                "Satellite": imagery
+            };
+
+            var overlaymaps = {
+                "Blank Footprints": footprints,
+                "Satellite Footprints": satFootprints,
+                "2023 Zoning Map" : zoningMap,
+                "Classified Footprints": classifiedFootprints,
+                "Churches" : churchFootprints,
+                'Theaters': theaterFootprints,
+                'Garages': garageFootprints,
+                'Transit': transitFootprints,
+                "Hotels" : hotelFootprints,
+                "Industrial" : industrialFootprints,
+                "Institutional" : institutionalFootprints,
+                "UChicago" : uchicagoFootprints,
+                "Stores" : storeFootprints,
+                "Flats" : flatFootprints,
+                "Dwellings" : dwellingFootprints
+            };
+        L.control.layers(
+                basemaps, overlaymaps, {collapsed:true}).addTo(map);
         
     </script>
 

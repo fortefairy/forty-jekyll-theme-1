@@ -4,6 +4,8 @@ layout: maps
 description: '1920s map of Hyde Park'
 image: assets/images/southside.jpg
 nav-menu: true
+show_tile: false
+is_map: true
 ---
 
 <!DOCTYPE html>
@@ -12,8 +14,8 @@ nav-menu: true
         <div class="dropdown">
             <button class="dropbtn">Satellite Overlay</button>
             <div class="dropdown-content">
-                <div>
-                        <input type="radio" id="default" name="base-layer" checked>
+                <div class="checkboxes">
+                        <input type="radio" id="default" name="base-layer" checked> 
                         <label for="default">Default</label>
                     </div>
                     <div>
@@ -25,10 +27,14 @@ nav-menu: true
               <div class="dropdown">
             <button class="dropbtn">Building Usage/Zone</button>
             <div class="dropdown-content">
-                <div>
+                <div >
                     <input type="checkbox" id="blank-footprints">
                     <label for="blank-footprints">Blank Footprints</label>
                   </div>
+                <div>
+                    <input type="checkbox" id="sat-footprints">
+                    <label for="sat-footprints">Satellite Footprints</label>
+                </div>
             <div>
                     <input type="checkbox" id="classified-footprints" checked>
                     <label for="classified-footprints">Classified Footprints</label>
@@ -86,68 +92,7 @@ nav-menu: true
         <h2>Hyde Park</h2>
         <details class="legend">
             <summary><b>Legend</b></summary>
-            <table>
-                <tr>
-                  <td>Church</td>
-                  <td><span class="legend-colorBox" style="background-color: #9fed18;">
-                </span></td>
-                </tr>
-                <tr>
-                  <td>Dwelling</td>
-                  <td><span class="legend-colorBox" style="background-color: #987db7;">
-                </span></td>
-                </tr>
-                <tr>
-                    <td>Hotel</td>
-                    <td>              
-                        <span class="legend-colorBox" style="background-color: #efc866;">
-                  </span>
-                </td>
-                  </tr>
-                  <tr>
-                    <td>Industrial</td>
-                    <td>              
-                        <span class="legend-colorBox" style="background-color: #00e9fe;">
-                        </span>
-                </td>
-                  </tr>
-                  <tr>
-                    <td>Institution</td>
-                    <td>              
-                        <span class="legend-colorBox" style="background-color: #ff8fd6;">
-                        </span>
-                </td>
-                  </tr>
-                  <tr>
-                    <td>Store</td>
-                    <td>              
-                        <span class="legend-colorBox" style="background-color: #d9615b;">
-                        </span>
-                </td>
-                  </tr>
-                  <tr>
-                    <td>Flat</td>
-                    <td>              
-                        <span class="legend-colorBox" style="background-color: #3596ce;">
-                        </span>
-                </td>
-                  </tr>
-                  <tr>
-                    <td>UChicago</td>
-                    <td>              
-                        <span class="legend-colorBox" style="background-color: #800000;">
-                        </span>
-                </td>
-                  </tr>
-              <tr>
-                <td>Default</td>
-                <td>              
-                    <span class="legend-colorBox" style="background-color: #808080;">
-                    </span>
-            </td>
-              </tr>
-            </table>
-
+            <table id="legend-table"></table>
         </details>
 <br>
 <h3>Location Information</h3>
@@ -159,20 +104,20 @@ nav-menu: true
     </div>	
 </section>
 
-<script src="https://parkerotto.github.io/Final/r20hp.js"></script>
+<script src="https://parkerotto.github.io/R20/R20HP/r20hp_height.js"></script>
 
 <script src="https://parkerotto.github.io/Final/zoning.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
 var map = L.map('map', {
             attributionControl: false
         }).setView([41.794, -87.5948], 16);
         L.control.attribution({prefix: false}).addTo(map);
 
-        var tilesource_layer = L.tileLayer('https://parkerotto.github.io/Final/{z}/{x}/{y}.png', {
+        var tilesource_layer = L.tileLayer('https://parkerotto.github.io/R20/xyz/{z}/{x}/{y}.png', {
             minZoom: 15,
-            maxZoom: 17,
+            maxZoom: 18,
             tms: false,
             attribution: 'Created by Parker Otto (2024) using QGIS.  2023 Street Centerlines, 2016 Chicago Park District Boundaries, 2012 Waterways, and 2023 Community Area Boundaries from the Chicago Data Portal.'
         }).addTo(map);
@@ -197,10 +142,13 @@ function getZoningColor(fudgeZone) {
                     case 'Dwelling' : return '#987db7'; // Lavender
                     case 'Hotel' : return '#efc866'; // Yellow
                     case 'Industrial' : return '#00e9fe'; // Light Blue
-                    case 'Institutio' : return '#ff8fd6'; // Pink
+                    case 'Institutional' : return '#ff8fd6'; // Pink
                     case 'Store' : return '#d9615b'; // Burnt Siena
                     case 'Flat' : return '#3596ce'; // Blue
                     case 'UChicago' : return '#800000'; // Maroon
+                    case 'Theater' : return '#FF0000'; //Red
+                    case 'Garage' : return '#006400'; // Green
+                    case 'Transit' : return '#000000'; //Black
                     default : return '#808080'; // Gray
                 }
             };
@@ -209,6 +157,27 @@ function getZoningColor(fudgeZone) {
                 switch (use) {
                     case 'Church' : return '#9fed18';
                     default : return 'transparent';
+                }
+            };
+
+            function getTheaterStyle(Uses) {
+                switch (Uses) {
+                    case 'Theater' : return '#FF0000'; 
+                    default: return 'transparent';
+                }
+            };
+
+            function getGarageStyle(Uses) {
+                switch (Uses) {
+                    case 'Garage' : return '#006400'; 
+                    default: return 'transparent';
+                }
+            };
+
+            function getTransitStyle(Uses) {
+                switch (Uses) {
+                    case 'Transit' : return '#000000'; //PLACEHOLDER COLOR
+                    default: return 'transparent';
                 }
             };
 
@@ -235,7 +204,7 @@ function getZoningColor(fudgeZone) {
             
             function getInstitutionalStyle(use) {
                 switch (use) {
-                    case 'Institutio' : return '#ff8fd6'; // Pink
+                    case 'Institutional' : return '#ff8fd6'; // Pink
                     default : return 'transparent';
                 }
             };
@@ -260,14 +229,6 @@ function getZoningColor(fudgeZone) {
                     default : return 'transparent'; // Gray
                 }
             };
-
-       //     function getFillOpacityByUse(use) {
-     //           switch (use) {
-     //               case 'Church': return 0.5;
-   //                 case 'Flat': return 0.9;
-   //                 default: return 0.7;
-   //             }
-  //          };
 
             function style(feature){
                 return {
@@ -388,7 +349,51 @@ function getZoningColor(fudgeZone) {
                     fillOpacity: 0.4
                 }
             };
-            
+function updateLegend() {
+        var checkedLayers = [];
+        document.querySelectorAll('.custom-layer-control input[type="checkbox"]').forEach(function(checkbox) {
+            if (checkbox.checked) {
+                const layerName = checkbox.labels[0].textContent;
+                let color;
+                switch (layerName) {
+                    case 'Blank Footprints':
+                    case 'Classified Footprints':
+                    case 'Satellite Footprints':
+                        color = getColorByUse('Default');  // Assuming a default color
+                        break;
+                    case '2023 Zoning Map':
+                        color = getZoningColor('Business and Commercial');  // Assuming a default class
+                        break;
+                    default:
+                        color = getColorByUse(layerName.slice(0, -1));  // Removing last char to match with the key in getColorByUse
+                }
+                checkedLayers.push({
+                    name: layerName,
+                    color: color
+                });
+            }
+        });
+
+        var legendTable = document.getElementById('legend-table');
+        legendTable.innerHTML = "";
+
+        checkedLayers.forEach(function(layer) {
+            var row = document.createElement('tr');
+            var cell1 = document.createElement('td');
+            var cell2 = document.createElement('td');
+            var colorBox = document.createElement('span');
+            colorBox.classList.add("legend-colorBox");
+            colorBox.style.backgroundColor = layer.color;
+
+            cell1.textContent = layer.name;
+            cell2.appendChild(colorBox);
+
+            row.appendChild(cell1);
+            row.appendChild(cell2);
+
+            legendTable.appendChild(row);
+        });
+    }
 var zoningOEF = function (feature, layer) {
                 if (feature.properties) {
                     var prop = feature.properties;
@@ -415,6 +420,9 @@ var zoningOEF = function (feature, layer) {
                         '<br><b>Footprint Area: </b>' + prop['area'] + ' m<sup>2</sup>' +
                         '<br><b>Footprint Year: </b>' + prop['Year'] +
                         '<br><b>Use: </b>' + prop['Use'] +
+                        '<br><b>Height: </b>' + prop['Height'] + ' Stories' + 
+                        '<br><b>Primary Material: </b>' + prop['Material'] + 
+                        '<br><b>Building Name (If Applicable): </b>' + prop['Name'] + 
                         '<br><br><small>Coordinates: <i>' + prop['lat'] + ', ' + prop['long'] + '</i></small>';
 
                     feature.layer = layer;
@@ -552,6 +560,7 @@ var footprints = new L.geoJson(r20hp,
                 }
             );
 
+            
 function switchBaseLayer(layer) {
             map.eachLayer(function(lyr) {
                 if (lyr !== layer) {
@@ -564,6 +573,7 @@ function switchBaseLayer(layer) {
         var overlayLayers = {
             'Blank Footprints': footprints,
             'Classified Footprints': classifiedFootprints,
+            'Satellite Footprints': satFootprints,
           "2023 Zoning Map" : zoningMap,
             'Churches': churchFootprints,
             'Hotels': hotelFootprints,
@@ -583,6 +593,7 @@ function switchBaseLayer(layer) {
                 } else {
                     map.removeLayer(layer);
                 }
+                updateLegend();
             });
         });
 
@@ -621,7 +632,7 @@ function switchBaseLayer(layer) {
 
             var overlaymaps = {
                 "Blank Footprints": footprints,
-                "Blank Footprints (Satellite)": satFootprints,
+                "Satellite Footprints": satFootprints,
                 "2023 Zoning Map" : zoningMap,
                 "Classified Footprints": classifiedFootprints,
                 "Churches" : churchFootprints,
@@ -636,10 +647,9 @@ function switchBaseLayer(layer) {
         L.control.layers(
                 basemaps, overlaymaps, {collapsed:true}).addTo(map);
         
+                updateLegend();
     </script>
 
 </body>
 
 </html>
-
-
