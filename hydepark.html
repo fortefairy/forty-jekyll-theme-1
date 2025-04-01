@@ -27,7 +27,7 @@ is_map: true
               <div class="dropdown">
             <button class="dropbtn">Building Usage/Zone</button>
             <div class="dropdown-content">
-                <div >
+                <div>
                     <input type="checkbox" id="blank-footprints">
                     <label for="blank-footprints">Blank Footprints</label>
                   </div>
@@ -92,7 +92,7 @@ is_map: true
         <h2>Hyde Park</h2>
         <details class="legend">
             <summary><b>Legend</b></summary>
-            <table id="legend-table"></table>
+            <span id='legend-table'></span>
         </details>
 <br>
 <h3>Location Information</h3>
@@ -349,51 +349,7 @@ function getZoningColor(fudgeZone) {
                     fillOpacity: 0.4
                 }
             };
-function updateLegend() {
-        var checkedLayers = [];
-        document.querySelectorAll('.custom-layer-control input[type="checkbox"]').forEach(function(checkbox) {
-            if (checkbox.checked) {
-                const layerName = checkbox.labels[0].textContent;
-                let color;
-                switch (layerName) {
-                    case 'Blank Footprints':
-                    case 'Classified Footprints':
-                    case 'Satellite Footprints':
-                        color = getColorByUse('Default');  // Assuming a default color
-                        break;
-                    case '2023 Zoning Map':
-                        color = getZoningColor('Business and Commercial');  // Assuming a default class
-                        break;
-                    default:
-                        color = getColorByUse(layerName.slice(0, -1));  // Removing last char to match with the key in getColorByUse
-                }
-                checkedLayers.push({
-                    name: layerName,
-                    color: color
-                });
-            }
-        });
-
-        var legendTable = document.getElementById('legend-table');
-        legendTable.innerHTML = "";
-
-        checkedLayers.forEach(function(layer) {
-            var row = document.createElement('tr');
-            var cell1 = document.createElement('td');
-            var cell2 = document.createElement('td');
-            var colorBox = document.createElement('span');
-            colorBox.classList.add("legend-colorBox");
-            colorBox.style.backgroundColor = layer.color;
-
-            cell1.textContent = layer.name;
-            cell2.appendChild(colorBox);
-
-            row.appendChild(cell1);
-            row.appendChild(cell2);
-
-            legendTable.appendChild(row);
-        });
-    }
+            
 var zoningOEF = function (feature, layer) {
                 if (feature.properties) {
                     var prop = feature.properties;
@@ -431,6 +387,7 @@ layer.on('click', function (){
   document.getElementById('location-data').innerHTML = `${popup}`
   
 });
+
                   
 
                     layer.on('click', function () {
@@ -560,7 +517,64 @@ var footprints = new L.geoJson(r20hp,
                 }
             );
 
-            
+            function updateLegend() {
+            var tableContent = "";
+            if (document.getElementById('classified-footprints').checked) {
+                tableContent = `
+                <table>
+                    <tr>
+                        <td>Church</td>
+                        <td><span class="legend-colorBox" style="background-color: #9fed18;"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Garage</td>
+                        <td><span class="legend-colorBox" style="background-color: #006400;"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Theater</td>
+                        <td><span class="legend-colorBox" style="background-color: #FF0000;"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Transit</td>
+                        <td><span class="legend-colorBox" style="background-color: #000000;"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Dwelling</td>
+                        <td><span class="legend-colorBox" style="background-color: #987db7;"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Hotel</td>
+                        <td><span class="legend-colorBox" style="background-color: #efc866;"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Industrial</td>
+                        <td><span class="legend-colorBox" style="background-color: #00e9fe;"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Institution</td>
+                        <td><span class="legend-colorBox" style="background-color: #ff8fd6;"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Store</td>
+                        <td><span class="legend-colorBox" style="background-color: #d9615b;"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Flat</td>
+                        <td><span class="legend-colorBox" style="background-color: #3596ce;"></span></td>
+                    </tr>
+                    <tr>
+                        <td>UChicago</td>
+                        <td><span class="legend-colorBox" style="background-color: #800000;"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Default</td>
+                        <td><span class="legend-colorBox" style="background-color: #808080;"></span></td>
+                    </tr>
+                </table>`;
+            }
+            var legendTable = document.getElementById('legend-table');
+            legendTable.innerHTML = tableContent;
+        }
 function switchBaseLayer(layer) {
             map.eachLayer(function(lyr) {
                 if (lyr !== layer) {
@@ -593,7 +607,7 @@ function switchBaseLayer(layer) {
                 } else {
                     map.removeLayer(layer);
                 }
-                updateLegend();
+                updateLegend()
             });
         });
 
@@ -646,8 +660,7 @@ function switchBaseLayer(layer) {
             };
         L.control.layers(
                 basemaps, overlaymaps, {collapsed:true}).addTo(map);
-        
-                updateLegend();
+        updateLegend();
     </script>
 
 </body>
