@@ -961,7 +961,6 @@ function switchBaseLayer(layer) {
                 "Classified Footprints": classifiedFootprints,
                 'Building Height' : heightFootprints,
                 'Building Material' : materialFootprints,
-                'Named' : namedFootprints,
                 "Churches" : churchFootprints,
                 'Theaters': theaterFootprints,
                 'Garages': garageFootprints,
@@ -974,8 +973,7 @@ function switchBaseLayer(layer) {
                 "Flats" : flatFootprints,
                 "Dwellings" : dwellingFootprints
             };
-        L.control.layers(
-                basemaps, overlaymaps, {collapsed:true}).addTo(map);
+            L.control.layers(basemaps, overlaymaps, {collapsed:true}).addTo(map);
                 
         updateLegend();
         

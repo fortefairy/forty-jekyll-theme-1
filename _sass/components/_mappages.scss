@@ -4,8 +4,6 @@
 
     }
     
-
-
 #map {
     width: 75%;
     height: 100vh;
@@ -164,6 +162,7 @@ padding: 0.5em;
     .responsive {
         display: block !important;
     }
+
   }
 
   @media screen and (min-width: 2500px) {
@@ -197,17 +196,7 @@ padding: 0.5em;
   .checkboxes label span {
     vertical-align: middle;
   }
-
-  /* The sidepanel menu */
-.sidepanel {
-    display: none;
-
-}
-
-.openbtn {
-    display: none;
-}
-
-.responsive {
+  
+  .responsive {
     display: none;
 }
