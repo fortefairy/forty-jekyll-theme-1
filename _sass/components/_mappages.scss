@@ -159,15 +159,13 @@ padding: 0.5em;
 
     }
 
-    .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
-
-        display: block;
+    .dropbtn {
+        display: none;
     }
 
-    .custom-layer-control {
 
-        display: none;
-
+    .responsive {
+        display: block !important;
     }
   }
 
@@ -202,3 +200,17 @@ padding: 0.5em;
   .checkboxes label span {
     vertical-align: middle;
   }
+
+  /* The sidepanel menu */
+.sidepanel {
+    display: none;
+
+}
+
+.openbtn {
+    display: none;
+}
+
+.responsive {
+    display: none;
+}
