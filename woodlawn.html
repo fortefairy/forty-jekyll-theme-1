@@ -11,7 +11,15 @@ show_tile: false
 <!DOCTYPE html>
 <html>
 <!--This controls the layer banner at the top of the map !-->
-    <div class="custom-layer-control" id="overlay-controls">
+<script>
+    function toggleMenu() {
+        var menuContent = document.getElementById("menu-content");
+        menuContent.classList.toggle("show");
+    }
+</script>
+        <div class="custom-layer-control" id="overlay-controls">
+            <button class="toggle-menu" onclick="toggleMenu()">Additional Filters</button> <!-- Add toggle button -->
+            <div class="dropdown-content" id="menu-content">
         <div class="dropdown">
             <button class="dropbtn">Satellite Overlay</button>
             <div class="dropdown-content">
@@ -92,6 +100,7 @@ show_tile: false
                           </div>
                     </div>  
         </div>
+    </div>
     </div>
     </div>
 <!--More information about Section ID "one" can be found in components> section.scss AND skel.scss AND in the maps template !-->

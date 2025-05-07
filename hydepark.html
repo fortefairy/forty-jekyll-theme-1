@@ -9,8 +9,16 @@ is_map: true
 ---
 
 <!DOCTYPE html>
+<script>
+    function toggleMenu() {
+        var menuContent = document.getElementById("menu-content");
+        menuContent.classList.toggle("show");
+    }
+</script>
 <html>
     <div class="custom-layer-control" id="overlay-controls">
+        <button class="toggle-menu" onclick="toggleMenu()">Additional Filters</button> <!-- Add toggle button -->
+        <div class="dropdown-content" id="menu-content">
         <div class="dropdown">
             <button class="dropbtn">Satellite Overlay</button>
             <div class="dropdown-content">
@@ -113,42 +121,7 @@ is_map: true
                     </div>
         </div>
     </div>
-    <div class="dropdown responsive">
-        <button class="dropbtn responsive">responsive</button>
-        <div class="dropdown-content">
-            <details class="legend">
-                <summary><b>Satellite Overlay</b></summary>
-                <div>
-                    <input type="radio" id="default" name="base-layer" checked>
-                    <label for="default">Default</label>
-                </div>
-                <div>
-                    <input type="radio" id="satellite" name="base-layer">
-                    <label for="satellite">Satellite</label>
-                </div>
-            </details>
-            <details>
-                <summary> bla</summary>
-                <div>
-                    <input type="checkbox" id="blank-footprints1">
-                    <label for="blank-footprints1">Blank Footprints</label>
-                  </div>
-                <div>
-                    <input type="checkbox" id="sat-footprints1">
-                    <label for="sat-footprints1">Satellite Footprints</label>
-                </div>
-            <div>
-                    <input type="checkbox" id="classified-footprints1" checked>
-                    <label for="classified-footprints1">Classified Footprints</label>
-                </div>
-            <div>
-                    <input type="checkbox" id="2024-zoning-maps1">
-                    <label for="2024-zoning-maps1">2024 Zoning Map</label>
-                  </div>
-                </div>
-            </details>
-            </div>
-          </div>
+</div>
 <!--     <div class="responsive-dropdown"></div>
     <button class="openbtn" onclick="openNav()">&#9776; Toggle Sidepanel</button>
     <div id="mySidepanel" class="sidepanel">
@@ -739,7 +712,7 @@ var footprints = new L.geoJson(r20hp,
 
             function updateLegend() {
             var tableContent = "";
-            if (document.getElementById('classified-footprints').checked) {
+            if (document.getElementById('classified-footprints').checked){
                 tableContent = `
                 <table>
                     <tr>
@@ -841,7 +814,7 @@ var footprints = new L.geoJson(r20hp,
                 </table>`;
             }
 
-            if (document.getElementById('2024-zoning-map').checked || document.getElementById('2024-zoning-maps1').checked) {
+            if (document.getElementById('2024-zoning-map').checked) {
                 tableContent = `
                 <table>
                     <tr>
@@ -925,6 +898,7 @@ function switchBaseLayer(layer) {
                 if (radio.id === "default" && radio.checked) {
                     map.eachLayer(function(layer) {
                         map.removeLayer(layer);
+                        
                     });
                     tilesource_layer.addTo(map);
                     if (document.getElementById('classified-footprints').checked) {
@@ -974,8 +948,44 @@ function switchBaseLayer(layer) {
                 "Dwellings" : dwellingFootprints
             };
             L.control.layers(basemaps, overlaymaps, {collapsed:true}).addTo(map);
-                
-        updateLegend();
+
+            
+
+
+            const collection = document.getElementsByClassName('leaflet-control-layers-selector');
+
+            const full_list = Object.keys(basemaps).concat(Object.keys(overlaymaps));
+
+            for (var i = 0; i < full_list.length ; i++) {
+                full_list[i] =  full_list[i].toLowerCase();
+                full_list[i] =  full_list[i].replaceAll(' ', '-');
+            } 
+
+            for (var i = 0; i < full_list.length ; i++)
+            collection[i].id = full_list[i]+1;
+
+
+            document.querySelectorAll('.custom-layer-control input[type="checkbox"]').forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    if (checkbox.checked) {
+                        document.getElementById( checkbox.id + 1).checked = true;
+                    }
+                    else {
+                        document.getElementById( checkbox.id + 1).checked = false;
+                    }
+                });
+            });
+
+
+           
+                updateLegend();
+
+
+
+
+            
+
+
         
     </script>
 

@@ -69,7 +69,9 @@ line-height: 1;
     background-color: #444;
 }
 
-
+.leaflet-control-layers {
+    display: none;
+}
 
 table td {
     padding: .2rem;
@@ -131,6 +133,16 @@ details[open] {
 padding: 0.5em;
 }
 
+.toggle-menu {
+    display: none;
+}
+
+#menu-content {
+    display: inline-block;
+    position: relative;
+    text-align: center;
+}
+
 //Responsive Layout
 
 @media screen and (max-width: 1000px) {
@@ -153,14 +165,55 @@ padding: 0.5em;
         display: block;
 
     }
-
-    .dropbtn {
-        display: none;
+    
+    .custom-layer-control {
+        margin-left: auto;
+        margin-right: auto;
+        width: calc(100% - 20px);
+        flex-wrap: wrap; /* Wrap items in mobile view */
+        justify-content: space-between;
     }
 
-
-    .responsive {
+    .dropdown-content {
+        position: static; /* Make dropdown content flow with the document */
+        background-color: #444; /* Slightly different background for visibility */
+    }
+    .custom-layer-control {
+        position: relative;
+        top: 0;
+        margin: 0 auto;
+        width: 100%;
+        background: #333;
+        color: white;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 1000;
+        text-align: center;
+    }
+    
+    .toggle-menu {
+        background-color: #444;
+        padding: 10px;
+        color: white;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+        margin-bottom: 10px;
         display: block !important;
+    }
+    
+    #menu-content {
+        display: none !important; /* Hide by default */
+        width: 100%;
+        padding: 0;
+        height: 200px;
+        overflow: auto;
+    }
+    
+    #menu-content.show {
+        display: block !important; /* Show when toggle button is pressed */
     }
 
   }
@@ -197,6 +250,3 @@ padding: 0.5em;
     vertical-align: middle;
   }
   
-  .responsive {
-    display: none;
-}
